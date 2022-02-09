@@ -42,7 +42,13 @@ ul {
     list-style-type: none;
 }
 
-#randomButton {
+#randomButton,
+#ingredientSearch {
     display: block;
+    width: fit-content;
     margin: 0 auto;
+}
+
+p {
+    margin: 0 1em;
 }
