@@ -1,7 +1,3 @@
-# WYWM-Snell-web-dev
-
-<!-- Random Drink selector JS Code -->
-
 // console.log('Hello World');
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -12,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function getRandomCocktail () {
+    //instead of the url here i actuailly need it to be "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=" + ingredient search
     fetch('https://www.thecocktaildb.com/api/json/v1/1/random.php')
   .then(
     function(response) {

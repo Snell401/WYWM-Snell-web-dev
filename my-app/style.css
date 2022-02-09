@@ -1,0 +1,32 @@
+main {
+    position: absolute;
+    background: #e0a896;
+
+}
+
+h1 {
+    width: 100%;
+    text-align: center;
+    text-shadow: #fdfbfb 0px 0px 5px;
+    
+}
+
+#drink-section {
+    margin: 0;
+    padding : 0;
+    width: 100%;
+    text-align: center;
+    margin-top: 50px;
+}
+
+#drink-section >img{
+    
+    width: 25%;
+    height: auto;
+    -webkit-box-shadow: -4px 3px 18px 4px #000000; 
+    box-shadow: -4px 3px 18px 4px #000000;
+}
+
+ul {
+    padding: 0;
+}
