@@ -1,7 +1,16 @@
-main {
-    position: absolute;
-    background: #e0a896;
+:root {
+    --bgColor: #e0a896;
+}
 
+body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: var(--bgColor);
+}
+
+main {
+   width: fit-content;
+   margin: 0 auto;
 }
 
 h1 {
@@ -28,5 +37,12 @@ h1 {
 }
 
 ul {
+    margin-top: 1em;
     padding: 0;
+    list-style-type: none;
+}
+
+#randomButton {
+    display: block;
+    margin: 0 auto;
 }
