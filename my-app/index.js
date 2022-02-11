@@ -1,34 +1,42 @@
-// console.log('Hello World');
-
-/**
- * If you place your <script> tag at the end of the body, or if you
- * place it in the <head> tag, with the attribute `defer`, you can be
- * sure that your script will not run until the DOM content is loaded,
- * so you won't need to listen for a "DOMContentLoaded" event
- */
-// document.addEventListener('DOMContentLoaded', function() {
-/**
- * You need to apply the `addEventListener` method to an HTML element
- */
-//     addEventListener('click', function() {
-/**
- * I recommend using an `id` and `getElementById` rather than
- * `querySelector`, since this latter might not return the element
- * that you expect, if someone else rearranges your HTML
- */
-//         document.querySelector('.center').innerHTML = 'label';
-//
-// });
-// });
-
 const title = document.getElementById("title");
 const search = document.getElementById("findByIngredient");
+const ingredient = document.getElementById("cocktailIngredient");
 const getRandom = document.getElementById("randomButton");
 const drinkSection = document.getElementById("drink-section");
 
 const randomURL = "https://www.thecocktaildb.com/api/json/v1/1/random.php";
 const ingredientURL =
-  "https://www.thecocktaildb.com/api/json/v1/1/search.php?i=";
+  "https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=";
+const idURL = "https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i="
+
+
+
+// UTILITY FUNCTIONS // UTILITY FUNCTIONS // UTILITY FUNCTIONS //
+
+function checkStatus(response) {
+  if (response.status !== 200) {
+    throw new Error(`Status error: ${response.status}`)
+
+  } else {
+    return response.json()
+  }
+}
+
+
+function clearBar() {
+  // Remove current children of drink section
+  while (drinkSection.firstChild) {
+    drinkSection.removeChild(drinkSection.lastChild);
+  }
+}
+
+
+function addCocktail(data) {
+  // data will have the structure { drinks: Object[] }
+  // Only one cocktail will be present, so we simply choose the
+  // first object in the drinks array
+  displayCocktail(data.drinks[0]);
+}
 
 
 
@@ -36,38 +44,82 @@ const ingredientURL =
 
 function getRandomCocktail() {
   fetch(randomURL)
-  .then(treatResponse)
+  .then(checkStatus)
+  .then(replaceCurrentCocktail)
+  .catch(function (err) {
+    console.log("Fetch Error:", err);
+  });
+
+  function replaceCurrentCocktail(data) {
+    clearBar()
+    addCocktail(data)
+  }
+}
+
+
+
+// FIND BY INGREDIENT // FIND BY INGREDIENT // FIND BY INGREDIENT //
+
+function findByIngredient() {
+  const chosenIngredient = ingredient.value
+  if (!chosenIngredient) {
+    return
+  } else if (chosenIngredient.indexOf(",") > -1) {
+    // You need to be a $2+ Patreon supporter to search for
+    // multi-ingredients
+    return
+  }
+
+  const searchURL = `${ingredientURL}${chosenIngredient}`
+  // console.log("searchURL", searchURL);
+
+  fetch(searchURL)
+  .then(checkStatus)
+  .then(replaceCurrentCocktails)
   .catch(function (err) {
     console.log("Fetch Error :-S", err);
   });
 
-  function treatResponse(response) {
-    if (response.status !== 200) {
-      console.log(
-        "Looks like there was a problem. Status Code: " + response.status
-      );
-      return;
-    }
-
-    // Examine the text in the response
-    response.json()
-    .then(replaceCurrentCocktail);
+  /**
+   *
+   * @param {Object} data has the format:
+   * { "drinks": [
+   *     {
+   *       "strDrink": "Brandy Flip",
+   *       "strDrinkThumb": "https://www.thecocktaildb.com/images/...jpg",
+   *       "idDrink": "11164"
+   *     },
+   *     ...
+   *   ]
+   * }
+   */
+  function replaceCurrentCocktails(data) {
+    // console.log("data", JSON.stringify(data, null, '  '));
+    clearBar()
+    data.drinks.forEach(getCocktailById);
   }
 
-  function replaceCurrentCocktail(data) {
-    // Remove current children of drink section
-    while (drinkSection.firstChild) {
-      drinkSection.removeChild(drinkSection.lastChild);
-    }
+  /**
+   *
+   * @param {Object} cocktailData
+   * {
+   *    "strDrink": "Brandy Flip",
+   *    "strDrinkThumb": "https://www.thecocktaildb.com/images/...jpg",
+   *    "idDrink": "11164"
+   *  }
+   */
+  function getCocktailById(cocktailData) {
+    const id = cocktailData.idDrink
+    const searchURL = `${idURL}${id}`
 
-    // data will have the structure { drinks: Object[] }
-    // Only one cocktail will be returned, so we simply choose the
-    // first object in the drinks array
-    displayCocktail(data.drinks[0]);
+    fetch(searchURL)
+    .then(checkStatus)
+    .then(addCocktail)
+    .catch(error => console.log("Error in getCocktailById", error));
   }
 }
 
-getRandomCocktail();
+
 
 // DISPLAY COCKTAIL // DISPLAY COCKTAIL / DISPLAY / DISPLAY COCKTAIL //
 
@@ -161,14 +213,21 @@ function displayCocktail(cocktail) {
   drinkSection.appendChild(instructions);
 }
 
-/**
- * You would need to appendChild() this newButton element somewhere
- */
-// //newButton to refresh the page
-// let newButton = document.createElement("button");
-// newButton.innerHTML = "New Cocktail";
-// newButton.addEventListener("click", function () {
-//   location.reload();
-// });
 
+// KEYBOARD SHORTCUT // KEYBOARD SHORTCUT // KEYBOARD SHORTCUT //
+
+function checkForEnter(event) {
+  if (event.key === "Enter") {
+    event.preventDefault()
+    findByIngredient()
+  }
+}
+
+// Activate the buttons
+search.addEventListener("click", findByIngredient)
+ingredient.addEventListener("keyup", checkForEnter)
 getRandom.addEventListener("click", getRandomCocktail)
+
+
+// Open the page with a random cocktail by default
+getRandomCocktail();
