@@ -1,31 +1,56 @@
+<!-- cocktail app
+Author Darren Snell-->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Monoton&family=Pathway+Gothic+One&display=swap" rel="stylesheet">
+    <link rel="icon" type="./img/favi.png" href="img/favi.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
+
     <title>My Cocktail app</title>
 
+    <!-- Defered so i don't need a DOM listener -->
     <script defer src="index.js"></script>
   </head>
 
   <body>
     <main class="main-body">
-      <h1 id="title">Random Cocktail</h1>
+      <h1 id="title">Find me a Cocktail</h1>
 
-      <!-- <label for="cocktailIngredient">
-        <input type="text" name="Ingredient" id="cocktailIngredient" />
-      </label>
-
-      <button id="findByIngredient">Search</button> -->
+      <!-- refresh page to get another random cocktail -->
       <button id="randomButton">Get Random Cocktail</button>
 
-      <section id="drink-section"></section>
+      <!-- section is used to contain API information -->
+      <section id="drink-section">
+        <h2 id="drink-name">Cocktail Name</h2>
+      </section>
 
-      <div class="center"></div>
+      <!-- create an ingredient search -->
+      <h2>You can also search for an ingredient <span>&#128071;</span></h2>
+      <div id="ingredientSearch">
+        Ingredient:
+        <input
+          type="text"
+          name="Ingredient"
+          id="cocktailIngredient"
+          placeholder="i.e. 'Vodka'"
+        />
+        <button id="findByIngredient">Search</button>
+      </div>
+
+      
     </main>
 
-    
+    <!-- make a footer with copy right D Snell 2022 -->
+    <footer>
+      <p>&copy; D Snell 2020</p>
+    </footer>
   </body>
 </html>
